@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-day</title>
+<style>
+body{
+  margin:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  font-family:sans-serif;
+  background:#ffffff;
+}
+.box{
+  text-align:center;
+}
+.date{
+  font-size:18px;
+  margin-bottom:8px;
+}
+.count{
+  font-size:48px;
+  font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <div class="date" id="dateText"></div>
+  <div class="count" id="ddayText"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const dateParam = params.get("date");
+const nameParam = params.get("name") || "";
+
+const target = new Date(dateParam + "T00:00:00");
+const today = new Date();
+
+const diff = target - today;
+const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+function pad(n){ return n < 10 ? "0"+n : n; }
+
+const y = target.getFullYear();
+const m = pad(target.getMonth()+1);
+const d = pad(target.getDate());
+
+let result;
+if(days > 0){
+  result = "D-" + days;
+}else if(days === 0){
+  result = "D-DAY";
+}else{
+  result = "D+" + Math.abs(days);
+}
+
+document.getElementById("dateText").innerText = `${y}-${m}-${d} ${nameParam}`;
+document.getElementById("ddayText").innerText = result;
+</script>
+
+</body>
+</html>

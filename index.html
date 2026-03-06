@@ -47,21 +47,23 @@ body{
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const dateParam = params.get("date");
+const dateParam = params.get("date") || "2026-03-13"; // 날짜가 없을 경우 기본값 설정
 const nameParam = params.get("name") || "";
 
-const target = new Date(dateParam + "T00:00:00");
+// 날짜 문자열을 안전하게 분리해서 Date 객체 생성
+const [year, month, day] = dateParam.split('-').map(Number);
+const target = new Date(year, month - 1, day); // month는 0부터 시작하므로 -1
 const today = new Date();
+
+// 오늘 날짜를 0시 0분 0초로 맞춰서 정확하게 계산
+today.setHours(0, 0, 0, 0);
 
 const diff = target - today;
 const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
 function pad(n){ return n < 10 ? "0"+n : n; }
 
-const y = target.getFullYear();
-const m = pad(target.getMonth()+1);
-const d = pad(target.getDate());
-
+// 결과 출력
 let result;
 if(days > 0){
   result = "D-" + days;
@@ -71,7 +73,7 @@ if(days > 0){
   result = "D+" + Math.abs(days);
 }
 
-document.getElementById("dateText").innerText = `${y}-${m}-${d} ${nameParam}`;
+document.getElementById("dateText").innerText = `${year}-${pad(month)}-${pad(day)} ${nameParam}`;
 document.getElementById("ddayText").innerText = result;
 </script>
 
